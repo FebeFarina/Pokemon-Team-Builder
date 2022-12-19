@@ -7,16 +7,20 @@ import os
 from tkinter import *
 from tkinter import ttk
 
-root = Tk()
-root.title("Pokemon Team Builder")
-mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
+class Table:
+    def __init__(self, root):
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(root, width=20, fg='blue',
+                               font=('Arial',16,'bold'))
+
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, lst[i][j])
 
 prolog = Prolog()
 prolog.consult("src/pokemon_rules.pl")
 team = []
+team_names = ("Pokemon")
 team_weaknesses = []
 team_resistances = []
 while len(team) < 6:
@@ -24,6 +28,7 @@ while len(team) < 6:
     if pokemon == "quit":
         break
     team.append(pokemon)
+    team_names.append(pokemon)
 print("Your team is: {}.".format(team))
 text = ', '.join(team)
 text = f"[{text}]"
@@ -40,5 +45,34 @@ for types in full_team_weak_list:
         full_team_resist_list.remove(types)
 print("Your team is weak against: {}.".format(full_team_weak_list))
 print("Your team is resistant against: {}.".format(full_team_resist_list))
+
+lst = [(1,'Raj','Mumbai',19), 
+(2,'Aaryan','Pune',18), 
+(3,'Vaishnavi','Mumbai',20), 
+(4,'Rachna','Mumbai',21), 
+(5,'Shubham','Delhi',21)]
+total_rows = len(lst)
+total_columns = len(lst[0])
+
+root = Tk()
+
+root.title("Pokemon Team Builder")
+root.geometry("500x500")
+
+set = ttk.Treeview(root)
+set.pack()
+
+set['columns']= team_names
+set.column("#0", width=0,  stretch=NO)
+set.column("id",anchor=CENTER, width=80)
+set.column("full_Name",anchor=CENTER, width=80)
+set.column("award",anchor=CENTER, width=80)
+
+set.heading("#0",text="",anchor=CENTER)
+set.heading("id",text="ID",anchor=CENTER)
+set.heading("full_Name",text="Full_Name",anchor=CENTER)
+set.heading("award",text="Award",anchor=CENTER)
+
+root.mainloop()
 
 
