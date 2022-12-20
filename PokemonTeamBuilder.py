@@ -9,17 +9,21 @@ from tkinter import ttk
 import customtkinter
 
 
+prolog = Prolog()
+prolog.consult("src/pokemon_rules.pl")
+team_info = []
+team_pkm = []
+general_weakness = []
+
 def check_weaknesses():
-    general_weakness = []
     if len(team_info) == 0:
-        print("Team is empty!")
-        return
+        return "Team is empty!"
     text = ', '.join(team_pkm)
     text = f"[{text}]"
     for matchup in prolog.query("teamTypeCovered("+text+",X)"):
         general_weakness.append(matchup['X'])
     general_weakness = list(dict.fromkeys(general_weakness))
-    print(str(general_weakness))
+    return ', '.join(general_weakness)
     
 def add_pkm():
     if len(team_info) == 6:
@@ -33,7 +37,6 @@ def add_pkm():
     weak, resist = get_pkm_weakness(pkm)
     team_info.append([pkm, weak, resist])
     team_pkm.append(pkm)
-    check_weaknesses()
     refresh_data()
 
 def get_pkm_weakness(pokemon):
@@ -89,6 +92,8 @@ button.pack(pady=12, padx=10)
 button2 = customtkinter.CTkButton(master=frame1, text="Remove Pokemon", font=("Roboto", 16), command=remove_pkm)
 button2.pack(pady=12, padx=10)
 
+text2 = "Your team is weak of the following types: "+check_weaknesses()
+label2 = customtkinter.CTkLabel(master=frame1, text=text2, font=("Roboto", 12))
 
 frame2 = customtkinter.CTkFrame(master=root)
 frame2.pack(pady=20, padx=60, fill="both", expand=True)
@@ -105,11 +110,6 @@ treescroll = ttk.Scrollbar(frame2, orient="vertical", command=t1.yview)
 treescroll.configure(command=t1.yview)
 t1.configure(yscrollcommand=treescroll.set)
 treescroll.pack(side="right", fill="y")
-
-prolog = Prolog()
-prolog.consult("src/pokemon_rules.pl")
-team_info = []
-team_pkm = []
 
 root.mainloop()
 
