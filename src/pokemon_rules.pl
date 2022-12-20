@@ -58,3 +58,7 @@ teamResistsAndWeaknesses(T, R, W) :-
   teamResistsAndWeaknesses(B, TR, TW),
   append(PR, TR, R),
   append(PW, TW, W).
+
+teamTypeCovered(T, X) :-
+  teamResistsAndWeaknesses(T, R, _W),
+  member(X, R).

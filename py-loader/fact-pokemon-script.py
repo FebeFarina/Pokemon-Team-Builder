@@ -11,7 +11,7 @@ with open('../data/pokemon_data.json', 'r') as pokemon_data:
       types = pokemon['types']
       for t in types:
         type = t['type']['name']
-        type_list.append('type('+name.lower()+','+type.lower()+').')
+        type_list.append('have_type('+name.lower()+','+type.lower()+').')
     out = open('../src/pokemon_facts.pl','w+')
     for p in pokemon_list:
       out.write(p+'\n')
