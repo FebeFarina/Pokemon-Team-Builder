@@ -60,5 +60,7 @@ teamResistsAndWeaknesses(T, R, W) :-
   append(PW, TW, W).
 
 teamTypeCovered(T, X) :-
-  teamResistsAndWeaknesses(T, R, _W),
-  member(X, R).
+  teamResistsAndWeaknesses(T, R, W),
+  type(X),
+  not(member(X, R)),
+  member(X, W).

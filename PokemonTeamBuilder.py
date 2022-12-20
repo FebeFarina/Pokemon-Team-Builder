@@ -10,10 +10,17 @@ import customtkinter
 
 
 def check_weaknesses():
+    general_weakness = []
     if len(team_info) == 0:
         print("Team is empty!")
         return
-        
+    text = ', '.join(team_pkm)
+    text = f"[{text}]"
+    for matchup in prolog.query("teamTypeCovered("+text+",X)"):
+        general_weakness.append(matchup['X'])
+    general_weakness = list(dict.fromkeys(general_weakness))
+    print(str(general_weakness))
+    
 def add_pkm():
     if len(team_info) == 6:
         print("Team is full!")
@@ -32,7 +39,7 @@ def add_pkm():
 def get_pkm_weakness(pokemon):
     weak = []
     resist = []
-    for matchup in prolog.query("pokemonResistsAndWeaknesses("+team_pkm+",R,W)"):
+    for matchup in prolog.query("pokemonResistsAndWeaknesses("+pokemon+",R,W)"):
         weak.append(matchup['W'])
         resist.append(matchup['R'])
     weak = [item for sublist in weak for item in sublist]
@@ -103,8 +110,6 @@ prolog = Prolog()
 prolog.consult("src/pokemon_rules.pl")
 team_info = []
 team_pkm = []
-team_weaknesses = []
-team_resistances = []
 
 root.mainloop()
 
