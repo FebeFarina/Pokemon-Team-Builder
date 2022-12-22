@@ -22,8 +22,8 @@ def check_weaknesses():
     text = f"[{text}]"
     for matchup in prolog.query("teamTypeCovered("+text+",X)"):
         general_weakness.append(matchup['X'])
-    general_weakness = list(dict.fromkeys(general_weakness))
-    return ', '.join(general_weakness)
+    general_weakness_dict = list(dict.fromkeys(general_weakness))
+    text2.set("Your team is weak of the following types: "+str(general_weakness_dict))
     
 def add_pkm():
     if len(team_info) == 6:
@@ -37,6 +37,7 @@ def add_pkm():
     weak, resist = get_pkm_weakness(pkm)
     team_info.append([pkm, weak, resist])
     team_pkm.append(pkm)
+    check_weaknesses()
     refresh_data()
 
 def get_pkm_weakness(pokemon):
@@ -92,8 +93,10 @@ button.pack(pady=12, padx=10)
 button2 = customtkinter.CTkButton(master=frame1, text="Remove Pokemon", font=("Roboto", 16), command=remove_pkm)
 button2.pack(pady=12, padx=10)
 
-text2 = "Your team is weak of the following types: "+check_weaknesses()
-label2 = customtkinter.CTkLabel(master=frame1, text=text2, font=("Roboto", 12))
+text2 = tk.StringVar()
+label2 = customtkinter.CTkLabel(master=frame1, textvariable=text2, font=("Roboto", 12))
+text2.set("Your team is empty!")
+label2.pack(pady=12, padx=10)
 
 frame2 = customtkinter.CTkFrame(master=root)
 frame2.pack(pady=20, padx=60, fill="both", expand=True)
