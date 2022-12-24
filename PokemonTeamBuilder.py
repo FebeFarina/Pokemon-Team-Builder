@@ -13,9 +13,9 @@ prolog = Prolog()
 prolog.consult("src/pokemon_rules.pl")
 team_info = []
 team_pkm = []
-general_weakness = []
 
 def check_weaknesses():
+    general_weakness = []
     if len(team_info) == 0:
         return "Team is empty!"
     text = ', '.join(team_pkm)
@@ -69,6 +69,8 @@ def remove_pkm():
         print("Team is empty!")
         return
     team_info.pop()
+    team_pkm.pop()
+    check_weaknesses()
     refresh_data()
 
 customtkinter.set_appearance_mode("dark")
@@ -79,7 +81,7 @@ root.title("Pokemon Team Builder")
 root.geometry("500x350")
 
 frame1 = customtkinter.CTkFrame(master=root)
-frame1.pack(pady=20, padx=60, fill="x", expand=True)
+frame1.pack(pady=20, padx=60, expand=True)
 
 label = customtkinter.CTkLabel(master=frame1, text="Pókemon Team Builder", font=("Roboto", 20))
 label.pack(pady=12, padx=10)
@@ -87,16 +89,15 @@ label.pack(pady=12, padx=10)
 entry = customtkinter.CTkEntry(master=frame1, placeholder_text="Enter a pokemon", font=("Roboto", 12))
 entry.pack(pady=12, padx=10)
 
-button = customtkinter.CTkButton(master=frame1, text="Add Pokemon", font=("Roboto", 16), command=add_pkm)
-button.pack(pady=12, padx=10)
-
-button2 = customtkinter.CTkButton(master=frame1, text="Remove Pokemon", font=("Roboto", 16), command=remove_pkm)
-button2.pack(pady=12, padx=10)
-
 text2 = tk.StringVar()
 label2 = customtkinter.CTkLabel(master=frame1, textvariable=text2, font=("Roboto", 12))
 text2.set("Your team is empty!")
 label2.pack(pady=12, padx=10)
+
+button = customtkinter.CTkButton(master=frame1, text="Add Pokemon", font=("Roboto", 16), command=add_pkm)
+button2 = customtkinter.CTkButton(master=frame1, text="Remove Pokemon", font=("Roboto", 16), command=remove_pkm)
+button.pack(pady=12, padx=10, side="left")
+button2.pack(pady=12, padx=10, side="right")
 
 frame2 = customtkinter.CTkFrame(master=root)
 frame2.pack(pady=20, padx=60, fill="both", expand=True)
