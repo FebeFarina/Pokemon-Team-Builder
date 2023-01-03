@@ -17,18 +17,19 @@ team_pkm = []
 def check_weaknesses():
     general_weakness = []
     if len(team_info) == 0:
-        return "Team is empty!"
+        text2.set("Your team is empty!")
+        return
     text = ', '.join(team_pkm)
     text = f"[{text}]"
     for matchup in prolog.query("teamTypeCovered("+text+",X)"):
         general_weakness.append(matchup['X'])
     general_weakness_dict = list(dict.fromkeys(general_weakness))
-    text2.set("Your team is weak of the following types: "+str(general_weakness_dict))
+    if len(general_weakness_dict) == 0:
+        text2.set("Your team types are all covered!")
+    else:
+        text2.set("Your team is weak of the following types: "+str(general_weakness_dict))
     
 def add_pkm():
-    if len(team_info) == 6:
-        print("Team is full!")
-        return
     pkm = entry.get()
     if pkm == "":
         print("No pokemon entered!")
@@ -66,7 +67,6 @@ def refresh_data():
 
 def remove_pkm():
     if len(team_info) == 0:
-        print("Team is empty!")
         return
     team_info.pop()
     team_pkm.pop()
