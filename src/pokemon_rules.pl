@@ -53,13 +53,17 @@ team([P|TP]):-
 teamResistsAndWeaknesses([], [], []).
 teamResistsAndWeaknesses(T, R, W) :-
   team(T),
+  !,
   T = [F|B],
   pokemonResistsAndWeaknesses(F, PR, PW),
   teamResistsAndWeaknesses(B, TR, TW),
   append(PR, TR, R),
   append(PW, TW, W).
 
-teamTypeCovered(T, X) :-
+teamTypeSuggestions(T, S) :-
   teamResistsAndWeaknesses(T, R, W),
   member(X, W),
-  not(member(X, R)).
+  findall(S, resistant(S, X), Suggestions),
+  member(S, Suggestions),
+  member(P, T),
+  not(have_type(P, S)).

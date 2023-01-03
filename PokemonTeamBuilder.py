@@ -16,20 +16,40 @@ team_pkm = []
 
 def check_weaknesses():
     general_weakness = []
+    general_resistance = []
+    type_suggestions = []
     if len(team_info) == 0:
         text2.set("Your team is empty!")
         return
     text = ', '.join(team_pkm)
     text = f"[{text}]"
-    for matchup in prolog.query("teamTypeCovered("+text+",X)"):
-        general_weakness.append(matchup['X'])
+    for match in prolog.query("teamResistsAndWeaknesses("+text+",R,W)"):
+        general_weakness.append(match['W'])
+        general_resistance.append(match['R'])
+    for match in prolog.query("teamTypeSuggestions("+text+",X)"):
+        type_suggestions.append(match['X'])
+    general_weakness = [item for sublist in general_weakness for item in sublist]
+    general_resistance = [item for sublist in general_resistance for item in sublist]
     general_weakness_dict = list(dict.fromkeys(general_weakness))
+    type_suggestions_dict = list(dict.fromkeys(type_suggestions))
+    for types in general_weakness_dict:
+        if types in general_resistance:
+            general_weakness_dict.remove(types)
+            general_resistance.remove(types)
     if len(general_weakness_dict) == 0:
         text2.set("Your team types are all covered!")
+        if len(team_info < 6):
+            text3.set("You can add more pokemons to your team!")
+        else:
+            text3.set("Your team is full!")
     else:
         text2.set("Your team is weak of the following types: "+str(general_weakness_dict))
+        text3.set("You should add a pokemon of the following types: "+str(type_suggestions_dict))
     
 def add_pkm():
+    if len(team_info) == 6:
+        print("Your team is full!")
+        return
     pkm = entry.get()
     if pkm == "":
         print("No pokemon entered!")
@@ -93,6 +113,11 @@ text2 = tk.StringVar()
 label2 = customtkinter.CTkLabel(master=frame1, textvariable=text2, font=("Roboto", 12))
 text2.set("Your team is empty!")
 label2.pack(pady=12, padx=10)
+
+text3 = tk.StringVar()
+label3 = customtkinter.CTkLabel(master=frame1, textvariable=text3, font=("Roboto", 12))
+text3.set("Type suggestions will appear here...")
+label3.pack(pady=12, padx=10)
 
 button = customtkinter.CTkButton(master=frame1, text="Add Pokemon", font=("Roboto", 16), command=add_pkm)
 button2 = customtkinter.CTkButton(master=frame1, text="Remove Pokemon", font=("Roboto", 16), command=remove_pkm)
