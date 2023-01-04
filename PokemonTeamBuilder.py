@@ -31,14 +31,14 @@ def check_weaknesses():
     general_weakness = [item for sublist in general_weakness for item in sublist]
     general_resistance = [item for sublist in general_resistance for item in sublist]
     general_weakness_dict = list(dict.fromkeys(general_weakness))
+    general_resistance_dict = list(dict.fromkeys(general_resistance))
     type_suggestions_dict = list(dict.fromkeys(type_suggestions))
-    for types in general_weakness_dict:
-        if types in general_resistance:
+    for types in general_resistance_dict:
+        if types in general_weakness_dict:
             general_weakness_dict.remove(types)
-            general_resistance.remove(types)
     if len(general_weakness_dict) == 0:
         text2.set("Your team types are all covered!")
-        if len(team_info < 6):
+        if len(team_info) < 6:
             text3.set("You can add more pokemons to your team!")
         else:
             text3.set("Your team is full!")
@@ -47,6 +47,7 @@ def check_weaknesses():
         text3.set("You should add a pokemon of the following types: "+str(type_suggestions_dict))
     
 def add_pkm():
+    pkm_types = []
     if len(team_info) == 6:
         print("Your team is full!")
         return
@@ -56,7 +57,9 @@ def add_pkm():
         return
     entry.delete(0, "end")
     weak, resist = get_pkm_weakness(pkm)
-    team_info.append([pkm, weak, resist])
+    for match in prolog.query("have_type("+pkm+",X)"):
+        pkm_types.append(match['X'])
+    team_info.append([pkm, pkm_types, weak, resist])
     team_pkm.append(pkm)
     check_weaknesses()
     refresh_data()
@@ -128,7 +131,7 @@ frame2 = customtkinter.CTkFrame(master=root)
 frame2.pack(pady=20, padx=60, fill="both", expand=True)
 
 t1 = ttk.Treeview(frame2)
-column_list_accout = ["Pokemon", "Weaknesses", "Resistances"]
+column_list_accout = ["Pokemon", "Types", "Weaknesses", "Resistances"]
 t1["columns"] = column_list_accout
 t1["show"] = "headings"
 for column in column_list_accout:

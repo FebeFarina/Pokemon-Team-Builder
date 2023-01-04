@@ -21,11 +21,13 @@ weak(T1, T2):-
 
 weak_against(P, X):-
     pokemon(P),
+    !,
     have_type(P, T),
     weak(T, X).
 
 strong_against(P, X):-
     pokemon(P),
+    !,
     have_type(P, T),
     super_effective(T, X).
 
@@ -60,10 +62,17 @@ teamResistsAndWeaknesses(T, R, W) :-
   append(PR, TR, R),
   append(PW, TW, W).
 
+checkTypeSuggestions([], _).
+checkTypeSuggestions(T, S) :-
+  team(T),
+  !,
+  T = [F|B],
+  not(have_type(F, S)),
+  checkTypeSuggestions(B, S).
+
 teamTypeSuggestions(T, S) :-
-  teamResistsAndWeaknesses(T, R, W),
+  teamResistsAndWeaknesses(T, _, W),
   member(X, W),
   findall(S, resistant(S, X), Suggestions),
   member(S, Suggestions),
-  member(P, T),
-  not(have_type(P, S)).
+  checkTypeSuggestions(T, S).
