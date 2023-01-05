@@ -19,18 +19,6 @@ weak(T1, T2):-
 
 /* Búsqueda de debilidades y fuerzas */
 
-weak_against(P, X):-
-    pokemon(P),
-    !,
-    have_type(P, T),
-    weak(T, X).
-
-strong_against(P, X):-
-    pokemon(P),
-    !,
-    have_type(P, T),
-    super_effective(T, X).
-
 pokemonResistsAndWeaknesses([], [], []).
 pokemonResistsAndWeaknesses(T, R, W) :-
     type(T),
