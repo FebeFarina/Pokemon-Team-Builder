@@ -1,6 +1,3 @@
-import matplotlib
-matplotlib.use("Agg")
-
 from pyswip import Prolog
 import sys
 import os
