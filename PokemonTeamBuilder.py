@@ -1,9 +1,7 @@
 from pyswip import Prolog
-import sys
-import os
+import customtkinter
 import tkinter as tk
 from tkinter import ttk
-import customtkinter
 
 
 prolog = Prolog()
